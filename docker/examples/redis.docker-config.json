@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json",
+  "containerType": "db",
+  "baseImage": "redis:7",
+  "network": "host",
+  "ports": [
+    {
+      "host": "$REDIS_PORT",
+      "container": 6379
+    }
+  ],
+  "volumes": [
+    {
+      "host": "$REDIS_DATA_DIR",
+      "container": "/data"
+    }
+  ],
+  "environment": [
+    "REDIS_PASSWORD",
+    "REDIS_PORT"
+  ],
+  "envRequired": [
+    "REDIS_PORT",
+    "REDIS_PASSWORD",
+    "REDIS_DATA_DIR"
+  ],
+  "capabilities": {
+    "backup": {
+      "command": "redis-cli -a $REDIS_PASSWORD save"
+    },
+    "shell": {
+      "command": "redis-cli -a $REDIS_PASSWORD -p $REDIS_PORT"
+    }
+  },
+  "healthcheck": {
+    "command": "redis-cli -a $REDIS_PASSWORD ping",
+    "interval": "10s",
+    "timeout": "5s",
+    "retries": 3
+  },
+  "startupOptions": [
+    "--restart", "unless-stopped"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json",
+  "containerType": "db",
+  "baseImage": "mongo:5.0",
+  "network": "host",
+  "ports": [
+    {
+      "host": "$MONGODB_PORT",
+      "container": 27017
+    }
+  ],
+  "volumes": [
+    {
+      "host": "$MONGODB_DATA_DIR",
+      "container": "/data/db"
+    },
+    {
+      "host": "$MONGODB_BACKUP_DIR",
+      "container": "/backup"
+    }
+  ],
+  "environment": [
+    "MONGODB_USERNAME",
+    "MONGODB_PASSWORD",
+    "MONGODB_PORT"
+  ],
+  "envRequired": [
+    "MONGODB_PORT",
+    "MONGODB_USERNAME",
+    "MONGODB_PASSWORD",
+    "MONGODB_DATA_DIR",
+    "MONGODB_BACKUP_DIR"
+  ],
+  "capabilities": {
+    "backup": {
+      "command": "mongodump --port=$MONGODB_PORT --username=$MONGODB_USERNAME --password=$MONGODB_PASSWORD --out=/backup/$(date +%Y%m%d_%H%M%S)"
+    },
+    "restore": {
+      "command": "mongorestore --port=$MONGODB_PORT --username=$MONGODB_USERNAME --password=$MONGODB_PASSWORD /backup/$BACKUP_DIR",
+      "interactive": true,
+      "promptMessage": "Enter backup directory name:"
+    },
+    "shell": {
+      "command": "mongosh --port=$MONGODB_PORT --username=$MONGODB_USERNAME --password=$MONGODB_PASSWORD"
+    }
+  },
+  "healthcheck": {
+    "command": "mongosh --eval 'db.runCommand({ ping: 1 })' --quiet",
+    "interval": "10s",
+    "timeout": "5s",
+    "retries": 3
+  },
+  "startupOptions": [
+    "--restart", "unless-stopped"
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DBA25 Docker Container Configuration",
+  "description": "Configuration schema for DBA25 Docker containers",
+  "type": "object",
+  "required": [
+    "containerType",
+    "baseImage",
+    "network",
+    "ports",
+    "volumes",
+    "environment",
+    "envRequired"
+  ],
+  "properties": {
+    "containerType": {
+      "type": "string",
+      "description": "Category of the container (db, api, web, etc.)",
+      "examples": ["db", "api", "web", "cache", "queue"]
+    },
+    "baseImage": {
+      "type": "string",
+      "description": "Base Docker image to use",
+      "examples": ["mongo:5.0", "node:18-alpine", "redis:7"]
+    },
+    "buildArgs": {
+      "type": "array",
+      "description": "Arguments to pass to docker build",
+      "items": {
+        "type": "string"
+      }
+    },
+    "network": {
+      "type": "string",
+      "description": "Docker network configuration",
+      "enum": ["host", "bridge", "none"]
+    },
+    "ports": {
+      "type": "array",
+      "description": "Port mappings for the container",
+      "items": {
+        "type": "object",
+        "required": ["host", "container"],
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Host port (can be an environment variable)",
+            "examples": ["$MONGODB_PORT", "3000"]
+          },
+          "container": {
+            "type": "integer",
+            "description": "Container port",
+            "examples": [27017, 3000, 8080]
+          }
+        }
+      }
+    },
+    "volumes": {
+      "type": "array",
+      "description": "Volume mappings for the container",
+      "items": {
+        "type": "object",
+        "required": ["host", "container"],
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Host path (can be an environment variable)",
+            "examples": ["$MONGODB_DATA_DIR", "/var/lib/data"]
+          },
+          "container": {
+            "type": "string",
+            "description": "Container path",
+            "examples": ["/data/db", "/app/data", "/var/log"]
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "array",
+      "description": "Environment variables to pass to the container",
+      "items": {
+        "type": "string",
+        "examples": ["MONGODB_USERNAME", "API_PORT", "NODE_ENV"]
+      }
+    },
+    "envRequired": {
+      "type": "array",
+      "description": "Environment variables that must be loaded before starting",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Special capabilities/commands supported by this container",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["command"],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "Command to execute inside container"
+          },
+          "interactive": {
+            "type": "boolean",
+            "description": "Whether the command requires user interaction"
+          },
+          "promptMessage": {
+            "type": "string",
+            "description": "Message to show when prompting for input"
+          }
+        }
+      }
+    },
+    "healthcheck": {
+      "type": "object",
+      "description": "Container health check configuration",
+      "required": ["command", "interval", "timeout", "retries"],
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "Command to check container health"
+        },
+        "interval": {
+          "type": "string",
+          "description": "Time between health checks",
+          "pattern": "^\\d+[smh]$"
+        },
+        "timeout": {
+          "type": "string",
+          "description": "Timeout for health check",
+          "pattern": "^\\d+[smh]$"
+        },
+        "retries": {
+          "type": "integer",
+          "description": "Number of retries before considering unhealthy",
+          "minimum": 1
+        }
+      }
+    },
+    "startupOptions": {
+      "type": "array",
+      "description": "Additional options to pass to docker run",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

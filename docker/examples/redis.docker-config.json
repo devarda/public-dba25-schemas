@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json",
+  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config.schema.json",
   "containerType": "db",
   "baseImage": "redis:7",
   "network": "host",

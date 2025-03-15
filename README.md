@@ -19,7 +19,7 @@ To use these schemas in VS Code:
     "fileMatch": [
       "**/docker-*/docker-config.json"
     ],
-    "url": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json"
+    "url": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config.schema.json"
   }
 ]
 ```
@@ -28,7 +28,7 @@ To use these schemas in VS Code:
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json",
+  "$schema": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config.schema.json",
   // rest of your configuration
 }
 ```

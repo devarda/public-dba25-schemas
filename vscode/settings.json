@@ -4,7 +4,7 @@
       "fileMatch": [
         "**/docker-*/docker-config.json"
       ],
-      "url": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config-schema.json"
+      "url": "https://raw.githubusercontent.com/devarda/public-dba25-schemas/master/docker/docker-config.schema.json"
     }
   ]
 }
